@@ -1,15 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { Server } from 'socket.io';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-// Extend Express Request to include user info
+// Extend Express Request to include user info and Socket.IO
 export interface AuthRequest extends Request {
   user?: {
     id: number;
     email: string;
     role: string;
   };
+  io?: Server;
 }
 
 // Verify JWT token

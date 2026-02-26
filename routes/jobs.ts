@@ -80,7 +80,7 @@ router.post('/', authenticate, authorizeRole('CLIENT'), async (req: AuthRequest,
       'INSERT INTO jobs (title, description, budget, status, client_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [title, description, budget, status || JobStatus.OPEN, req.user!.id]
     );
-
+    req.io?.to('taskers').emit('new_job',result.rows[0]);
     res.status(201).json({
       message: "Job posted successfully!",
       data: result.rows[0]

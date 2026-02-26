@@ -26,11 +26,12 @@ router.post('/', authenticate, authorizeRole('TASKER'), async (req: AuthRequest,
       'INSERT INTO applications (job_id, tasker_id, message) VALUES ($1, $2, $3) RETURNING *',
       [job_id, req.user!.id, message]
     );
-
     res.status(201).json({
       message: 'Application submitted successfully!',
       data: result.rows[0]
     });
+    req.io?.to('clients').emit(`Tasker having id: ${result.rows[0].tasker_id} has applied for your job.`)
+
   } catch (error: any) {
     // Handle duplicate application
     if (error.code === '23505') {
