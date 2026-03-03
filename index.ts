@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express, { Request, Response } from 'express';
-import {Server} from 'socket.io';
-import {createServer} from 'http';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
 import swaggerUi from 'swagger-ui-express';
 import jobRoutes from './routes/jobs';
 import userRoutes from './routes/users';
@@ -13,33 +13,39 @@ import generateSwagger from './swagger';
 import path from 'path';
 import fs from 'fs';
 
+// Import models to register associations
+import './models';
+
 const app = express();
 const port = process.env.PORT || 3000;
-const httpServer=createServer(app);
-const io=new Server(httpServer,{
-  cors:{
-    origin:"http://localhost:3000",
-    methods:['GET','POST']
-  }
-})
-io.on('connection',(socket)=>{
-  const {id,role,full_name}=(socket as any).user;
-  if(role==='CLIENT'){
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (socket) => {
+  const { id, role, full_name } = (socket as any).user;
+  if (role === 'CLIENT') {
     socket.join(`client_room_${id}`);
-    console.log(`Client ${full_name} joined taskers room`);    
+    console.log(`Client ${full_name} joined client room`);
   }
-  if(role==='TASKER'){
+  if (role === 'TASKER') {
     socket.join('taskers');
-    console.log(`Tasker ${full_name} joined clients room`);
+    console.log(`Tasker ${full_name} joined taskers room`);
   }
-  socket.on('disconnect',()=>{
-    console.log('user disconnected',socket.id);
+  socket.on('disconnect', () => {
+    console.log('user disconnected', socket.id);
   });
 });
-app.use((req:any,res:Response,next)=>{
-  req.io=io;
+
+app.use((req: any, res: Response, next) => {
+  req.io = io;
   next();
-})
+});
+
 // Middleware to parse JSON data sent to our API (must be before routes)
 app.use(express.json());
 
