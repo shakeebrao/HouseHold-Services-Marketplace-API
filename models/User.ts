@@ -45,7 +45,7 @@ User.init(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM(...Object.values(UserRole)),
+      type: DataTypes.STRING,
       defaultValue: UserRole.CLIENT,
     },
     created_at: {

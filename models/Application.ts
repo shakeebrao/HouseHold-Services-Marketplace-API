@@ -56,7 +56,7 @@ Application.init(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM(...Object.values(ApplicationStatus)),
+      type: DataTypes.STRING,
       defaultValue: ApplicationStatus.PENDING,
     },
     created_at: {

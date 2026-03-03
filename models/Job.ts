@@ -54,7 +54,7 @@ Job.init(
       defaultValue: 0.00,
     },
     status: {
-      type: DataTypes.ENUM(...Object.values(JobStatus)),
+      type: DataTypes.STRING,
       defaultValue: JobStatus.OPEN,
     },
     created_at: {

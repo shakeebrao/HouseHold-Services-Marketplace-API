@@ -21,8 +21,7 @@ export async function connectDB(): Promise<void> {
     console.log('✅ Connected to PostgreSQL database successfully!');
 
     // Sync all models (creates tables if they don't exist)
-    // Use { alter: true } in development to auto-update schema
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('✅ All models synchronized successfully!');
   } catch (error) {
     console.error('❌ Failed to connect to PostgreSQL database:', error);
